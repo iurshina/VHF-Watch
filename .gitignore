@@ -1,0 +1,34 @@
+# Bytecode
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+.venv/
+
+# Poetry
+poetry.lock
+
+# Logs
+*.log
+*.jsonl
+vhf_watch_log.jsonl
+
+# Editor/project files
+.vscode/
+.idea/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temp files
+*.tmp
+*.bak
+
+# Models (if manually downloaded)
+.models/
+
+.pytest_cache
+.ruff_cache
+kiwiclient/

@@ -1,0 +1,40 @@
+ruff = "*"
+mypy = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "vhf-watch"
+version = "0.1.0"
+description = "CLI tool to monitor marine distress calls using Whisper and llama.cpp"
+authors = ["Anastasiia Iurshina <anastasiia.iurshina@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{ include = "vhf_watch" }]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = "*"
+torch = "*"
+torchaudio = "*"
+torchvision = "*"
+openai-whisper = { git = "https://github.com/openai/whisper.git" }
+
+[tool.poetry.group.dev.dependencies]
+black = "*"
+ruff = "*"
+mypy = "*"
+pytest = "*"
+
+[tool.black]
+line-length = 88
+
+[tool.ruff]
+line-length = 88
+select = ["E", "F", "I"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true

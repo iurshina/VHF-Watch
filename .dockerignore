@@ -1,0 +1,21 @@
+# Local config
+.env
+
+# Logs
+*.log
+*.jsonl
+vhf_watch_log.jsonl
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Virtual environments
+.venv/
+
+# Models
+# .models/
+
+.pytest_cache
+.ruff_cache
+kiwiclient/
