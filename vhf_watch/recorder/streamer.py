@@ -87,7 +87,6 @@ def is_audio_active(wav_path: str, threshold_db: float = -45.0) -> bool:
 
 
 def transcribe_chunk(wav_path: str) -> str:
-    model = whisper.load_model("base")
     try:
         result = model.transcribe(wav_path)
         return result.get("text", "")
