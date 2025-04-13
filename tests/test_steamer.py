@@ -1,12 +1,14 @@
-import json
 import tempfile
+
 from vhf_watch.analyzer.llm_analyzer import analyze_transcript
 from vhf_watch.recorder import streamer
+
 
 def test_analyze_with_llm_mock(monkeypatch):
     def fake_run(*args, **kwargs):
         class Result:
             stdout = '{"call_for_help": true, "location": "Zakynthos"}'
+
         return Result()
 
     monkeypatch.setattr("subprocess.run", fake_run)
@@ -14,8 +16,10 @@ def test_analyze_with_llm_mock(monkeypatch):
     assert output["call_for_help"] is True
     assert "Zakynthos" in output["location"]
 
+
 def test_transcribe_chunk_mock(monkeypatch):
     import wave
+
     import numpy as np
 
     # Mock whisper model
@@ -27,7 +31,7 @@ def test_transcribe_chunk_mock(monkeypatch):
 
     # Generate a valid silent WAV file
     with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
-        with wave.open(tmp, 'w') as wf:
+        with wave.open(tmp, "w") as wf:
             wf.setnchannels(1)
             wf.setsampwidth(2)
             wf.setframerate(16000)

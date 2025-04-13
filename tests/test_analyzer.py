@@ -1,6 +1,6 @@
-import json
 
 from vhf_watch.analyzer.llm_analyzer import analyze_transcript
+
 
 def test_analyze_with_llm_mock(monkeypatch):
     def fake_run(*args, **kwargs):
