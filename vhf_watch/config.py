@@ -4,7 +4,7 @@ SDR_STREAMS = [
     "http://cyp.twrmon.net",  # Cyprus
     "http://tangerkiwi.ddns.net",  # Tanger
     "http://37.10.74.235",  # Mallorca
-    "http://mayzus.ddns.net" # Tenerife
+    "http://mayzus.ddns.net",  # Tenerife
 ]
 
 MODEL_PATH = "/app/llama.cpp/models/mistral.gguf"

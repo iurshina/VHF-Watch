@@ -1,15 +1,13 @@
-import subprocess
 import json
 import re
+import subprocess
 
-from vhf_watch.config import MODEL_PATH, LLAMA_CPP_BINARY
+from vhf_watch.config import LLAMA_CPP_BINARY, MODEL_PATH
 from vhf_watch.logger_config import setup_logger
 
 logger = setup_logger(name=__name__)
 
-FALLBACK_KEYWORDS = [
-    "mayday", "help", "rescue", "libyan coast guard", "frontex"
-]
+FALLBACK_KEYWORDS = ["mayday", "help", "rescue", "libyan coast guard", "frontex"]
 
 
 def analyze_transcript(transcript: str) -> dict:
@@ -39,7 +37,8 @@ def analyze_transcript(transcript: str) -> dict:
 
 def fallback_analysis(transcript: str) -> dict:
     detected = [
-        kw for kw in FALLBACK_KEYWORDS
+        kw
+        for kw in FALLBACK_KEYWORDS
         if re.search(rf"\b{re.escape(kw)}\b", transcript, re.IGNORECASE)
     ]
     if detected:
@@ -49,5 +48,5 @@ def fallback_analysis(transcript: str) -> dict:
             kw in transcript.lower() for kw in ["mayday", "help", "rescue"]
         ),
         "keywords": detected,
-        "llm_fallback": bool(detected)
+        "llm_fallback": bool(detected),
     }

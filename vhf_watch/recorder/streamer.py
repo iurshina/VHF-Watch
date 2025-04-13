@@ -1,17 +1,19 @@
-import tempfile
-import wave
+import glob
 import os
 import re
-import glob
 import shutil
+import tempfile
+import wave
+from subprocess import CalledProcessError, run
+
 import numpy as np
 import whisper
-from subprocess import run, CalledProcessError
 
 from vhf_watch.logger_config import setup_logger
 
 logger = setup_logger(name=__name__)
 model = whisper.load_model("base")
+
 
 def sanitize_kiwi_host(kiwi_host: str) -> str:
     # Remove protocol and trailing paths like /stream
@@ -19,27 +21,37 @@ def sanitize_kiwi_host(kiwi_host: str) -> str:
     host = host.split("/")[0]
     return host
 
+
 def capture_audio_chunk(kiwi_host: str, chunk_duration: int) -> str:
     kiwi_host = sanitize_kiwi_host(kiwi_host)
     logger.info(f"Connecting to KiwiSDR: {kiwi_host}")
 
     with tempfile.TemporaryDirectory() as tmp_dir:
         kiwirecorder_cmd = [
-            "python3", "kiwiclient/kiwirecorder.py",
-            "-s", kiwi_host.split(":")[0],
-            "-p", kiwi_host.split(":")[1] if ":" in kiwi_host else "8073",
-            "-f", "156.800",            # marine VHF radio frequency
-            "-m", "nbfm",
+            "python3",
+            "kiwiclient/kiwirecorder.py",
+            "-s",
+            kiwi_host.split(":")[0],
+            "-p",
+            kiwi_host.split(":")[1] if ":" in kiwi_host else "8073",
+            "-f",
+            "156.800",  # marine VHF radio frequency
+            "-m",
+            "nbfm",
             # "-g", "50",
-            "-L", "0",
+            "-L",
+            "0",
             # "-H", "3000",
-            "--dir", tmp_dir,
-            "--station", "vhf_watch",
-            "--tlimit", str(chunk_duration)
+            "--dir",
+            tmp_dir,
+            "--station",
+            "vhf_watch",
+            "--tlimit",
+            str(chunk_duration),
         ]
 
         try:
-            result = run(kiwirecorder_cmd, stdout=None, stderr=None, check=True)
+            run(kiwirecorder_cmd, stdout=None, stderr=None, check=True)
             # Look for the output wav file
             matches = glob.glob(os.path.join(tmp_dir, "*.wav"))
             if matches:
@@ -53,24 +65,26 @@ def capture_audio_chunk(kiwi_host: str, chunk_duration: int) -> str:
         except CalledProcessError:
             logger.error(f"kiwirecorder.py error while capturing from {kiwi_host}")
             return ""
-        except Exception as e:
+        except Exception:
             logger.error("Failed to capture audio chunk", exc_info=True)
             return ""
 
+
 def is_audio_active(wav_path: str, threshold_db: float = -45.0) -> bool:
     try:
-        with wave.open(wav_path, 'rb') as wf:
+        with wave.open(wav_path, "rb") as wf:
             frames = wf.readframes(wf.getnframes())
             samples = np.frombuffer(frames, dtype=np.int16).astype(np.float32)
             if len(samples) == 0:
                 return False
-            rms = np.sqrt(np.mean(samples ** 2))
+            rms = np.sqrt(np.mean(samples**2))
             db = 20 * np.log10(rms / 32768.0 + 1e-6)
             logger.debug(f"RMS dB: {db:.2f}")
             return db > threshold_db
-    except Exception as e:
+    except Exception:
         logger.error("Failed to analyze audio activity", exc_info=True)
         return False
+
 
 def transcribe_chunk(wav_path: str) -> str:
     model = whisper.load_model("base")

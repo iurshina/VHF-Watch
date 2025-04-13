@@ -1,5 +1,4 @@
 import datetime
-import logging
 import random
 import time
 
@@ -7,8 +6,12 @@ from vhf_watch.analyzer.llm_analyzer import analyze_transcript
 from vhf_watch.cli import parse_args
 from vhf_watch.config import LOG_FILE, SDR_STREAMS
 from vhf_watch.logger.log_writer import log_event
-from vhf_watch.recorder.streamer import capture_audio_chunk, is_audio_active, transcribe_chunk
 from vhf_watch.logger_config import setup_logger
+from vhf_watch.recorder.streamer import (
+    capture_audio_chunk,
+    is_audio_active,
+    transcribe_chunk,
+)
 
 logger = setup_logger(name=__name__)
 
