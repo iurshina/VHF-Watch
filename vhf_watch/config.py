@@ -1,9 +1,10 @@
 SDR_STREAMS = [
-    # "http://fsdr.duckdns.org:8073/stream", # just for test
+    # "http://fsdr.duckdns.org:8073", # just for test
     "http://sv8rv.dyndns.org",  # Zakynthos, Greece (KiwiSDR)
-    # "http://cyp.twrmon.net:8073/stream",  # Cyprus
-    # "http://tangerkiwi.ddns.net/stream",  # Tanger
-    # "http://37.10.74.235:8073//stream",  # Mallorca
+    "http://cyp.twrmon.net",  # Cyprus
+    "http://tangerkiwi.ddns.net",  # Tanger
+    "http://37.10.74.235",  # Mallorca
+    "http://mayzus.ddns.net" # Tenerife
 ]
 
 MODEL_PATH = "/app/llama.cpp/models/mistral.gguf"

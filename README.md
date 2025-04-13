@@ -54,8 +54,8 @@ docker run --rm -it vhf-watch
 
 ```python
 SDR_STREAMS = [
-    "http://sv8rv.dyndns.org:8073/stream",  # Zakynthos, Greece
-    # Add more from https://rx.linkfanel.net
+    "http://sv8rv.dyndns.org",  # Zakynthos, Greece
+    # Add more from http://kiwisdr.com/public/
 ]
 ```
 
