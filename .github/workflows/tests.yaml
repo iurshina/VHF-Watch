@@ -1,0 +1,40 @@
+name: Run Tests and Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install Poetry
+        run: |
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run linters (ruff)
+        run: poetry run ruff check .
+
+      - name: Run type checks (mypy)
+        run: poetry run mypy vhf_watch/
+
+      - name: Check code format (black)
+        run: poetry run black --check .
+
+      - name: Run tests
+        run: poetry run pytest
