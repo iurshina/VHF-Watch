@@ -44,9 +44,7 @@ def fallback_analysis(transcript: str) -> dict:
     if detected:
         logger.warning(f"LLM fallback triggered — matched keywords: {detected}")
     return {
-        "call_for_help": any(
-            kw in transcript.lower() for kw in ["mayday", "help", "rescue"]
-        ),
+        "call_for_help": any(kw in transcript.lower() for kw in ["mayday", "help", "rescue"]),
         "keywords": detected,
         "llm_fallback": bool(detected),
     }

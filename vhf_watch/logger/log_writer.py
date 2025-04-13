@@ -2,9 +2,7 @@ import json
 from datetime import datetime
 
 
-def log_event(
-    timestamp: datetime, transcript: str, llm_response: str, log_file: str
-) -> None:
+def log_event(timestamp: datetime, transcript: str, llm_response: str, log_file: str) -> None:
     log_entry = {
         "timestamp": timestamp.isoformat(),
         "transcription": transcript,
