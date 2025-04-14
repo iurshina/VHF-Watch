@@ -1,0 +1,32 @@
+2.137	5.739	SPEAKER_02:  Roger, the Federal Bulford heat safe for southeast Shole is 0008.
+7.119	10.541	SPEAKER_02: The Algo Terra heat safe is 0110.
+12.282	14.162	SPEAKER_02: And there is a Clyde S. Mecklenburg in there as well.
+14.182	14.743	SPEAKER_02: Did you want that one?
+15.043	18.424	SPEAKER_02: American Mariners are out.
+20.485	22.306	SPEAKER_02: Roger, destination and cargo.
+23.306	24.147	SPEAKER_00: Receipt out.
+25.117	27.958	SPEAKER_00:  Motorbustle John G. Muntz will be inbound the route in approximately 30 minutes.
+27.978	28.858	SPEAKER_00: Security, security, security.
+29.218	32.019	SPEAKER_00: Motorbustle John G. Muntz will be inbound the route in approximately 30 minutes.
+32.219	34.26	SPEAKER_00: The guy needs a JWS guide.
+34.34	38.361	SPEAKER_00: About that now, it's a server-side ladder, correct?
+39.021	40.001	SPEAKER_00: Yep, server-side ladder.
+42.382	45.803	SPEAKER_02: Tower Spirit, turn traffic, go ahead.
+47.543	50.464	SPEAKER_02: Tower Spirit, and when you get an ETA for Graciela, I'll take that over.
+52.885	53.725	SPEAKER_02: Turn traffic.
+79.298	80.179	SPEAKER_02:  Mayday relay.
+80.219	80.899	SPEAKER_02: Mayday relay.
+82.04	82.5	SPEAKER_02: Mayday relay.
+84.281	84.921	SPEAKER_02: All stations.
+84.941	85.402	SPEAKER_02: All stations.
+85.502	87.503	SPEAKER_02: All stations.
+108.396	109.857	SPEAKER_01:  This is Sarnia Coast Guard Radio.
+110.197	111.317	SPEAKER_01: Sarnia Coast Guard Radio.
+111.577	112.697	SPEAKER_01: Sarnia Coast Guard Radio.
+113.518	118.159	SPEAKER_01: MMSI 00316-0030.
+118.98	119.42	SPEAKER_01: Mayday.
+120.3	127.643	SPEAKER_01: The Windsor Police have reported a male in the water by the Windsor Casino in the Detroit River.
+127.663	131.464	SPEAKER_01: Approximate position 4219 North, 083-02 West.
+139.111	148.558	SPEAKER_01:  All vessels in the area that can assist in locating this person are requested to contact this station with an estimated time of arrival.
+149.518	150.919	SPEAKER_01: This is China Coast Guard Radio.
+151.2	151.36	SPEAKER_01: Over.

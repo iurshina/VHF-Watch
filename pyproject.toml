@@ -16,6 +16,8 @@ packages = [{ include = "vhf_watch" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"
+webrtcvad = "^2.0.10"
+pydub = "*"
 numpy = "*"
 torch = "*"
 torchaudio = "*"

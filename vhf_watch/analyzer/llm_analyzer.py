@@ -2,7 +2,7 @@ import json
 import re
 import subprocess
 
-from vhf_watch.config import LLAMA_CPP_BINARY, MODEL_PATH
+from vhf_watch.config import FULL_LLAMA_CPP_BINARY, FULL_MODEL_PATH
 from vhf_watch.logger_config import setup_logger
 
 logger = setup_logger(name=__name__)
@@ -27,7 +27,16 @@ def analyze_transcript(transcript: str) -> dict:
     """
 
     try:
-        llama_cmd = [LLAMA_CPP_BINARY, "-m", MODEL_PATH, "-p", prompt, "-n", "200"]
+        llama_cmd = [
+            str(FULL_LLAMA_CPP_BINARY),
+            "-m",
+            str(FULL_MODEL_PATH),
+            "-p",
+            prompt,
+            "-n",
+            "200",
+        ]
+
         result = subprocess.run(llama_cmd, capture_output=True, text=True, timeout=60)
         return json.loads(result.stdout.strip())
     except Exception as e:

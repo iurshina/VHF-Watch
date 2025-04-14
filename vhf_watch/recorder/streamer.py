@@ -7,12 +7,15 @@ import wave
 from subprocess import CalledProcessError, run
 
 import numpy as np
+import webrtcvad
 import whisper
 
 from vhf_watch.logger_config import setup_logger
 
 logger = setup_logger(name=__name__)
+
 model = whisper.load_model("base")
+vad = webrtcvad.Vad(3)  # aggressiveness: 0 (very loose) to 3 (very strict)
 
 
 def sanitize_kiwi_host(kiwi_host: str) -> str:
@@ -41,6 +44,8 @@ def capture_audio_chunk(kiwi_host: str, chunk_duration: int) -> str:
             # "-g", "50",
             "-L",
             "0",
+            "-r",
+            "16000",  # resample
             # "-H", "3000",
             "--dir",
             tmp_dir,
@@ -83,6 +88,38 @@ def is_audio_active(wav_path: str, threshold_db: float = -45.0) -> bool:
             return db > threshold_db
     except Exception:
         logger.error("Failed to analyze audio activity", exc_info=True)
+        return False
+
+
+def is_speech_present(wav_path: str) -> bool:
+    try:
+        with wave.open(wav_path, "rb") as wf:
+            assert wf.getframerate() == 16000
+            assert wf.getnchannels() == 1
+            assert wf.getsampwidth() == 2
+
+            frame_duration = 30  # ms
+            frame_size = int(16000 * frame_duration / 1000) * 2  # bytes
+            speech_frames = 0
+
+            while True:
+                frame = wf.readframes(frame_size // 2)
+                if len(frame) < frame_size:
+                    break
+
+                frame_np = np.frombuffer(frame, dtype=np.int16)
+                energy = np.sqrt(np.mean(frame_np.astype(np.float32) ** 2))
+
+                if energy < 200:
+                    continue  # skip frames with very low energy
+
+                if vad.is_speech(frame, 16000):
+                    speech_frames += 1
+                    if speech_frames > 3:
+                        return True
+            return False
+    except Exception:
+        logger.error("VAD analysis failed", exc_info=True)
         return False
 
 

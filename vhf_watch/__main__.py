@@ -9,7 +9,7 @@ from vhf_watch.logger.log_writer import log_event
 from vhf_watch.logger_config import setup_logger
 from vhf_watch.recorder.streamer import (
     capture_audio_chunk,
-    is_audio_active,
+    is_speech_present,
     transcribe_chunk,
 )
 
@@ -26,7 +26,7 @@ def main():
         timestamp = datetime.datetime.utcnow()
 
         audio_bytes = capture_audio_chunk(current_stream, args.chunk)
-        if is_audio_active(audio_bytes):
+        if is_speech_present(audio_bytes):
             transcript = transcribe_chunk(audio_bytes)
             if transcript.strip():
                 if args.debug:
