@@ -51,13 +51,13 @@ class Transcriber:
                 "-p",
                 kiwi_host.split(":")[1] if ":" in kiwi_host else "8073",
                 "-f",
-                "156.800", # 
+                "156.800",  #
                 "-m",
                 "nbfm",
                 "-L",
                 "0",
                 "-r",
-                "16000", # resample
+                "16000",  # resample
                 "--dir",
                 tmp_dir,
                 "--station",
