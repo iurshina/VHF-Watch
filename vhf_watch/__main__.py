@@ -1,4 +1,5 @@
 import datetime
+import os
 import queue
 import random
 import threading
@@ -15,6 +16,18 @@ from vhf_watch.recorder.streamer import Transcriber
 logger = setup_logger(name=__name__)
 recorder = Transcriber()
 audio_queue: queue.Queue[Tuple[datetime.datetime, str]] = queue.Queue()
+
+
+REPETITION_THRESHOLD = 5  # how many repeated tokens to consider it junk
+SAVE_DIR = "captured_chunks"
+os.makedirs(SAVE_DIR, exist_ok=True)
+
+
+def is_repetitive_junk(transcript: str) -> bool:
+    tokens = transcript.strip().split()
+    return (
+        len(tokens) > 0 and len(set(tokens)) <= 3 and tokens.count(tokens[0]) > REPETITION_THRESHOLD
+    )
 
 
 def audio_capture_worker(duration, stop_event):
@@ -35,8 +48,18 @@ def audio_processing_worker(args, stop_event):
         if recorder.is_speech_present(audio_path):
             transcript = recorder.transcribe_chunk(audio_path)
             if transcript.strip():
+                if is_repetitive_junk(transcript):
+                    logger.info(f"Filtered out repetitive numeric junk: {transcript}")
+                    continue
+
+                filename = timestamp.strftime("%Y%m%d_%H%M%S.wav")
+                saved_path = os.path.join(SAVE_DIR, filename)
+                os.rename(audio_path, saved_path)
+                logger.info(f"Saved non-junk audio to {saved_path}")
+
                 if args.debug:
                     logger.debug(f"Transcript: {transcript}")
+
                 llm_response = analyze_transcript(transcript)
                 logger.info(f"Analysis: {llm_response}")
                 log_event(timestamp, transcript, llm_response, LOG_FILE)

@@ -121,12 +121,12 @@ class Transcriber:
                     frame_np = np.frombuffer(frame, dtype=np.int16)
                     energy = np.sqrt(np.mean(frame_np.astype(np.float32) ** 2))
 
-                    if energy < 200:
+                    if energy < 300:
                         continue
 
                     if self.vad.is_speech(frame, 16000):
                         speech_frames += 1
-                        if speech_frames > 3:
+                        if speech_frames > 5:
                             return True
                 return False
         except Exception:
