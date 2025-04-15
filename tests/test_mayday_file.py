@@ -3,9 +3,10 @@ import os
 from pydub import AudioSegment
 
 from vhf_watch.logger_config import setup_logger
-from vhf_watch.recorder.streamer import is_speech_present, transcribe_chunk
+from vhf_watch.recorder.streamer import Transcriber
 
 logger = setup_logger(name="test_mayday")
+recorder = Transcriber()
 
 
 def convert_mp3_to_wav(mp3_path: str, wav_path: str = None) -> str:
@@ -28,7 +29,7 @@ def test_mayday_audio():
         logger.error("Failed to convert MP3 to WAV.")
         return
 
-    if is_speech_present(wav_path):
+    if recorder.is_speech_present(wav_path):
         logger.info("Speech detected in audio.")
 
         # transcript = transcribe_chunk(wav_path)

@@ -7,13 +7,10 @@ from vhf_watch.cli import parse_args
 from vhf_watch.config import LOG_FILE, SDR_STREAMS
 from vhf_watch.logger.log_writer import log_event
 from vhf_watch.logger_config import setup_logger
-from vhf_watch.recorder.streamer import (
-    capture_audio_chunk,
-    is_speech_present,
-    transcribe_chunk,
-)
+from vhf_watch.recorder.streamer import Transcriber
 
 logger = setup_logger(name=__name__)
+transcriber = Transcriber()
 
 
 def main():
@@ -25,9 +22,9 @@ def main():
         current_stream = random.choice(SDR_STREAMS)
         timestamp = datetime.datetime.utcnow()
 
-        audio_bytes = capture_audio_chunk(current_stream, args.chunk)
-        if is_speech_present(audio_bytes):
-            transcript = transcribe_chunk(audio_bytes)
+        audio_path = transcriber.capture_audio_chunk(current_stream, args.chunk)
+        if audio_path and transcriber.is_speech_present(audio_path):
+            transcript = transcriber.transcribe_chunk(audio_path)
             if transcript.strip():
                 if args.debug:
                     logger.debug(f"Transcript: {transcript}")
