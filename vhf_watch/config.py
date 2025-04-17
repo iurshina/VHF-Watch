@@ -4,7 +4,7 @@ SDR_STREAMS = [
     # "http://fsdr.duckdns.org:8073", # just for test
     "http://sv8rv.dyndns.org",  # Zakynthos, Greece (KiwiSDR)
     "http://cyp.twrmon.net",  # Cyprus
-    # "http://tangerkiwi.ddns.net",  # Tanger
+    "http://tangerkiwi.ddns.net",  # Tanger
     "http://37.10.74.235",  # Mallorca
     # "http://mayzus.ddns.net",  # Tenerife
 ]

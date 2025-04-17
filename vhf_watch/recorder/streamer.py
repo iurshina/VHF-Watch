@@ -12,6 +12,7 @@ import webrtcvad
 import whisper
 
 from vhf_watch.logger_config import setup_logger
+from vhf_watch.recorder.speech_detector import SpeechDetector
 
 
 class Transcriber:
@@ -19,6 +20,7 @@ class Transcriber:
         self.logger = setup_logger(name=self.__class__.__name__)
         self.vad = webrtcvad.Vad(vad_aggressiveness)
         self.model = whisper.load_model(whisper_model)
+        self.speech_detector = SpeechDetector()
         self.failed_hosts = set()
 
     def sanitize_kiwi_host(self, kiwi_host: str) -> str:
@@ -102,8 +104,11 @@ class Transcriber:
             self.logger.error("Failed to analyze audio activity", exc_info=True)
             return False
 
-    def is_speech_present(self, wav_path: str) -> bool:
+    def is_speech_present(self, wav_path: str, use_silero: bool = True) -> bool:
         try:
+            if use_silero:
+                self.speech_detector.is_speech_present(wav_path=wav_path)
+
             with wave.open(wav_path, "rb") as wf:
                 assert wf.getframerate() == 16000
                 assert wf.getnchannels() == 1

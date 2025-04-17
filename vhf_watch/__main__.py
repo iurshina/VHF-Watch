@@ -26,7 +26,7 @@ os.makedirs(SAVE_DIR, exist_ok=True)
 def is_repetitive_junk(transcript: str) -> bool:
     tokens = transcript.strip().split()
     return (
-        len(tokens) > 0 and len(set(tokens)) <= 3 and tokens.count(tokens[0]) > REPETITION_THRESHOLD
+        len(tokens) > 0 and len(set(tokens)) <= 5 and tokens.count(tokens[0]) > REPETITION_THRESHOLD
     )
 
 
