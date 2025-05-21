@@ -53,7 +53,7 @@ def record_audio_to_file(duration=60, output="radio.wav"):
     ffmpeg_cmd = [
         "ffmpeg",
         "-f", "avfoundation",  # Use 'pulse', or 'avfoundation' on macOS
-        "-i", "default",
+        "-i", ":0",  # Laptop's Microphone
         "-t", str(duration),
         output
     ]
@@ -65,4 +65,5 @@ def record_audio_to_file(duration=60, output="radio.wav"):
 if __name__ == "__main__":
     page, browser = tune_openwebrx_with_profile(freq=156800000, mod="nfm")
     record_audio_to_file(duration=30, output="vhf_mayzus.wav")
-    browser.close()
+    if browser:
+        browser.close()
