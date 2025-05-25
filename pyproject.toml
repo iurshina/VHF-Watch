@@ -23,6 +23,7 @@ pydub = "*"
 numpy = "*"
 torch = "*"
 torchaudio = "*"
+websocket-client = "*"
 torchvision = "*"
 openai-whisper = { git = "https://github.com/openai/whisper.git" }
 

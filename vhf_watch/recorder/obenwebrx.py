@@ -1,69 +1,65 @@
-import subprocess
+import websocket
+import json
 
-from playwright.sync_api import sync_playwright, TimeoutError as PlaywrightTimeoutError
+AUDIO_OUTPUT = "radio_audio_stream.raw"
 
-# http://mayzus.ddns.net:8073/#freq=156800000,mod=nfm,sql=-120
-# First - chose the channel RSP1 Marine VHF
-# Chose the rigth frequency
+def on_message(ws, message):
+    if isinstance(message, bytes):
+        print(f"[+] Received {len(message)} bytes of audio data")
+        with open(AUDIO_OUTPUT, "ab") as f:
+            f.write(message)
+    else:
+        print(f"[i] Text message: {message}")
 
-# TODO: reverse-engineer the websocket?
+def on_open(ws):
+    print("[*] WebSocket connected, tuning...")
+    ws.send("SERVER DE CLIENT client=openwebrx.js type=receiver")
 
-def tune_openwebrx_with_profile(
-    url="http://mayzus.ddns.net:8073", 
-    profile_name="RSP1 [1] Marine VHF", 
-    freq=156800000, 
-    mod="nfm"
-):
-    try:
-        with sync_playwright() as p:
-            browser = p.chromium.launch(headless=False, args=["--no-sandbox"])
-            context = browser.new_context()
-            page = context.new_page()
+    # Optional: noise reduction
+    ws.send(json.dumps({
+        "type": "connectionproperties",
+        "params": {"nr_enabled": True}
+    }))
 
-            page.goto(url)
-            print("Opened URL")
+    # Select a profile if needed
+    # ws.send(json.dumps({
+    #     "type": "selectprofile",
+    #     "params": {"profile": "417be9c6-cb3f-48..."} 
+    # }))
 
-            # Wait for profile dropdown
-            page.wait_for_selector("#openwebrx-sdr-profiles-listbox", timeout=10000)
-            page.select_option("#openwebrx-sdr-profiles-listbox", label=profile_name)
-            print(f"Selected SDR profile: {profile_name}")
+    # Set DSP filter
+    ws.send(json.dumps({
+        "type": "dspcontrol",
+        "params": {"low_cut": -4000, "high_cut": 4000}
+    }))
 
-            # Wait for the receiver to be ready
-            page.wait_for_function("window.openwebrx_ready === true", timeout=10000)
+    # Apply frequency offset
+    ws.send(json.dumps({
+        "type": "dspcontrol",
+        "params": {"offset_freq": -2200000}
+    }))
 
-            # Tune frequency and modulation
-            js_code = f"""
-                if (typeof tune === 'function') {{
-                    tune({freq}, '{mod}');
-                }}
-            """
-            page.evaluate(js_code)
-            print(f"Tuned to {freq/1e6} MHz in {mod} mode.")
-
-            return page, browser
-    except PlaywrightTimeoutError as e:
-        print("Playwright timed out:", e)
-    except Exception as e:
-        print("Something went wrong:", e)
-
-    return None, None
+    # Start DSP
+    ws.send(json.dumps({
+        "type": "dspcontrol",
+        "action": "start"
+    }))
 
 
-def record_audio_to_file(duration=60, output="radio.wav"):
-    ffmpeg_cmd = [
-        "ffmpeg",
-        "-f", "avfoundation",  # Use 'pulse', or 'avfoundation' on macOS
-        "-i", ":0",  # Laptop's Microphone
-        "-t", str(duration),
-        output
-    ]
-    print("Recording audio...")
-    subprocess.run(ffmpeg_cmd)
-    print("Recording complete.")
+def on_error(ws, error):
+    print(f"[!] WebSocket error: {error}")
 
+def on_close(ws, close_status_code, close_msg):
+    print(f"[*] WebSocket closed: {close_status_code}, {close_msg}")
 
 if __name__ == "__main__":
-    page, browser = tune_openwebrx_with_profile(freq=156800000, mod="nfm")
-    record_audio_to_file(duration=30, output="vhf_mayzus.wav")
-    if browser:
-        browser.close()
+    websocket.enableTrace(False)
+    ws = websocket.WebSocketApp(
+        "ws://mayzus.ddns.net:8073/ws/",
+        on_open=on_open,
+        on_message=on_message,
+        on_error=on_error,
+        on_close=on_close
+    )
+    print("[*] Connecting to radio stream...")
+    ws.run_forever()
