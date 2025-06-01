@@ -9,6 +9,8 @@ SDR_STREAMS = [
     # "http://mayzus.ddns.net",  # Tenerife
 ]
 
+WEBSOCKRT_STREAM_URL = "ws://mayzus.ddns.net:8073/ws/"
+
 MODEL_PATH = "llama.cpp/models/mistral-7b-instruct-v0.2.Q4_K_M.gguf"
 LLAMA_CPP_BINARY = "llama.cpp/build/bin/llama-cli"
 

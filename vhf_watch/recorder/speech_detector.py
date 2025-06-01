@@ -6,9 +6,10 @@ import webrtcvad
 
 class SpeechDetector:
     def __init__(self):
-        # Load Silero VAD model from torch hub
         self.vad_model, self.utils = torch.hub.load(
-            repo_or_dir="snakers4/silero-vad", model="silero_vad", force_reload=False
+            './silero-vad',
+            'silero_vad',
+            source='local'
         )
         (self.get_speech_ts, self.save_audio, self.read_audio, _, _) = self.utils
 
