@@ -23,10 +23,6 @@ COPY pyproject.toml poetry.lock* ./
 RUN poetry config virtualenvs.create false \
  && poetry install --no-interaction --no-ansi
 
-# Clone kiwiclient and install its dependencies
-RUN git clone https://github.com/jks-prv/kiwiclient.git && \
-    pip install -r kiwiclient/requirements.txt
-
 # Copy the main application code
 COPY vhf_watch/ ./vhf_watch/
 

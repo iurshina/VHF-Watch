@@ -6,7 +6,7 @@
 
 ----
 
-**VHF-Watch** is a Python-based CLI tool that monitors live VHF marine radio streams. It transcribes radio audio locally using [Whisper](https://github.com/openai/whisper), analyzes it with a local [llama.cpp](https://github.com/ggerganov/llama.cpp) LLM, and logs events such as:
+**VHF-Watch** is a Python-based CLI tool that monitors a live VHF marine radio WebSocket stream. It transcribes radio audio locally using [Whisper](https://github.com/openai/whisper), analyzes it with a local [llama.cpp](https://github.com/ggerganov/llama.cpp) LLM, and logs events such as:
 
 - 🚨 Calls for help
 - 🛂 Mentions of “Libyan Coast Guard”, “Frontex”, or “rescue”
@@ -20,9 +20,10 @@
 - Python 3.10+
 - ffmpeg
 - [Poetry](https://python-poetry.org/) 
-- [Whisper](https://github.com/openai/whisper)
+- [Whisper](https://github.com/openai/whisper) (model files will be downloaded by the library on first use)
 - [llama.cpp](https://github.com/ggerganov/llama.cpp)
 - A quantized `.gguf` LLM model (e.g. `mistral-7b-instruct.Q4_K_M.gguf`)
+- The Silero VAD model files (`hubconf.py`, `silero_vad.onnx`, `utils_vad.py`) will be automatically downloaded to a `./silero-vad/` directory on first run if not found.
 
 ---
 
@@ -38,6 +39,7 @@ poetry install
 # Run the app
 poetry run python -m vhf_watch --debug --duration 15
 ```
+The application connects to a pre-configured WebSocket URL for the audio stream (see `vhf_watch/config.py`).
 
 ---
 
@@ -47,19 +49,7 @@ poetry run python -m vhf_watch --debug --duration 15
 docker build -t vhf-watch .
 docker run --rm -it vhf-watch
 ```
-
----
-
-## 🛰 SDR Streams
-
-```python
-SDR_STREAMS = [
-    "http://sv8rv.dyndns.org",  # Zakynthos, Greece
-    # Add more from http://kiwisdr.com/public/
-]
-```
-
-Tune manually in browser to verify: `156.800 MHz`, `NBFM`
+The Docker image includes all necessary dependencies. The WebSocket URL is also configured within the application.
 
 ---
 
@@ -68,8 +58,8 @@ Tune manually in browser to verify: `156.800 MHz`, `NBFM`
 | Flag         | Description                             |
 |--------------|-----------------------------------------|
 | `--debug`    | Print raw Whisper transcript             |
-| `--duration` | Time limit in minutes (default = 0)     |
-| `--chunk`    | Audio chunk length in seconds (default = 10) |
+| `--duration` | Time limit in minutes (default = 0, for continuous run)     |
+| `--chunk`    | Audio chunk length in seconds for processing (default = 10) |
 
 ---
 

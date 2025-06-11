@@ -1,14 +1,5 @@
 from pathlib import Path
 
-SDR_STREAMS = [
-    # "http://fsdr.duckdns.org:8073", # just for test
-    "http://sv8rv.dyndns.org",  # Zakynthos, Greece (KiwiSDR)
-    "http://cyp.twrmon.net",  # Cyprus
-    "http://tangerkiwi.ddns.net",  # Tanger
-    "http://37.10.74.235",  # Mallorca
-    # "http://mayzus.ddns.net",  # Tenerife
-]
-
 WEBSOCKRT_STREAM_URL = "ws://mayzus.ddns.net:8073/ws/"
 
 MODEL_PATH = "llama.cpp/models/mistral-7b-instruct-v0.2.Q4_K_M.gguf"
